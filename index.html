@@ -1394,18 +1394,13 @@
         gap: 24px;
       }
 
-      .metodo-grid {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 20px;
-      }
-
-      .sobre-split {
+      .sobre-grid {
         grid-template-columns: 1fr;
-        gap: 40px;
+        gap: 24px;
       }
 
-      .sobre-content-box {
-        padding: 36px;
+      .sobre-col-box {
+        padding: 32px 24px;
       }
 
       .diferenciais-grid {
@@ -1427,7 +1422,17 @@
 
     @media (max-width: 768px) {
       section.py-section {
-        padding: 60px 16px;
+        padding: 80px 16px 60px;
+      }
+
+      .section-header-stacked {
+        text-align: center;
+        margin-inline: auto;
+        margin-bottom: 40px;
+      }
+
+      .section-eyebrow {
+        margin-inline: auto;
       }
 
       #header {
@@ -1475,10 +1480,148 @@
         justify-content: center;
       }
 
-      .metodo-grid {
+      /* QUEM SOMOS COMPACT */
+      .sobre-grid {
         grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 32px;
       }
 
+      .sobre-col-box {
+        padding: 24px 20px;
+      }
+
+      .sobre-col-title {
+        font-size: 17px;
+        margin-bottom: 12px;
+      }
+
+      .sobre-col-text {
+        font-size: 13.5px;
+      }
+
+      .sobre-col-list {
+        padding-top: 16px;
+      }
+
+      /* TIMELINE METODO FIXED */
+      .metodo-timeline::before {
+        display: none;
+      }
+
+      .metodo-step {
+        flex-direction: column;
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .metodo-node {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .metodo-content {
+        width: 100%;
+        padding: 20px;
+      }
+
+      .metodo-content h3 {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+        font-size: 16px;
+      }
+
+      .metodo-content h3 span.phase-duration {
+        align-self: flex-start;
+        margin-left: 0;
+      }
+
+      .metodo-content p {
+        font-size: 13px;
+        margin-bottom: 12px;
+      }
+
+      .metodo-tasks {
+        gap: 8px;
+      }
+
+      /* DIFERENCIAIS 2X2 ON MOBILE */
+      .diferenciais-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+      }
+
+      .diferencial-card {
+        padding: 16px;
+        gap: 12px;
+        border-radius: 12px;
+      }
+
+      .diferencial-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+      }
+
+      .diferencial-icon-wrap {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+      }
+
+      .diferencial-icon-wrap i {
+        width: 18px;
+        height: 18px;
+      }
+
+      .diferencial-title {
+        font-size: 14px;
+        line-height: 1.2;
+      }
+
+      .diferencial-text {
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      /* PARCERIA COMPACT */
+      .parceria-secao {
+        padding: 24px 16px;
+        margin-top: 32px;
+      }
+
+      .parceria-grid {
+        gap: 24px;
+      }
+
+      .parceria-info h3 {
+        font-size: 20px;
+      }
+
+      .parceria-info p {
+        font-size: 13.5px;
+      }
+
+      .parceria-logo-card {
+        padding: 20px;
+        max-width: 280px;
+        width: 100%;
+      }
+
+      .parceria-logo-card img {
+        width: 80px;
+        height: 80px;
+      }
+
+      .parceria-logo-name {
+        font-size: 18px;
+      }
+
+      /* FOOTER & CTA */
       .footer-grid {
         grid-template-columns: 1fr;
         gap: 40px;
@@ -1492,6 +1635,32 @@
 
       .cta-wrapper {
         padding: 48px 24px;
+      }
+    }
+
+    /* VERY NARROW DEVICES FALLBACK (DIFERENCIAIS TO 1 COL) */
+    @media (max-width: 420px) {
+      .diferenciais-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .diferencial-card {
+        padding: 20px;
+      }
+
+      .diferencial-header {
+        flex-direction: row;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .diferencial-title {
+        font-size: 16px;
+      }
+
+      .diferencial-text {
+        font-size: 13.5px;
       }
     }
   </style>
