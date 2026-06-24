@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SFS Serviços e Construções | Engenharia e Execução Técnica de Obras</title>
+  <meta name="description"
+    content="SFS Serviços e Construções — Do planejamento físico-financeiro à entrega técnica. Construções civis, reformas, ampliações e manutenção sob rigor normativo ABNT.">
+
+  <!-- Premium Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet">
+
+  <!-- GSAP and Lucide Icons -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+  <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #070d19;
+      --bg-card: rgba(13, 23, 42, 0.55);
+      --bg-card-hover: rgba(13, 23, 42, 0.8);
+      --primary: #d48c00;
+      --primary-glow: rgba(212, 140, 0, 0.12);
+      --blue: #0b3d82;
+      --blue-light: #1a5bb5;
+      --blue-glow: rgba(11, 61, 130, 0.15);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --border-color: rgba(212, 140, 0, 0.08);
+      --border-hover: rgba(212, 140, 0, 0.25);
+      --glass-bg: rgba(14, 28, 52, 0.5);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --font-display: 'Outfit', sans-serif;
+      --font-mono: 'Space Mono', monospace;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      font-size: 16px;
+      background: var(--bg-dark);
+      overflow-x: hidden;
+      max-width: 100vw;
+    }
+
+    body {
+      font-family: var(--font-display);
+      background: var(--bg-dark);
+      color: var(--text-main);
+      overflow-x: hidden;
+      max-width: 100vw;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NOISE OVERLAY */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='1'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    /* CURSOR */
+    #cursor {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99999;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1), height 0.4s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s, opacity 0.4s;
+    }
+
+    #cursor-ring {
+      position: fixed;
+      width: 40px;
+      height: 40px;
+      border: 1.5px solid rgba(212, 140, 0, 0.35);
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 99998;
+      transform: translate(-50%, -50%);
+      opacity: 0;
+      transition: width 0.5s cubic-bezier(0.16, 1, 0.3, 1), height 0.5s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s, opacity 0.4s;
+    }
+
+    body.has-mouse {
+      cursor: none;
+    }
+
+    body.has-mouse #cursor,
+    body.has-mouse #cursor-ring {
+      opacity: 1;
+    }
+
+    body.has-mouse .cursor-grow #cursor {
+      width: 56px;
+      height: 56px;
+      background: rgba(212, 140, 0, 0.08);
+      border: 1.5px solid rgba(212, 140, 0, 0.5);
+    }
+
+    body.has-mouse .cursor-grow #cursor-ring {
+      width: 72px;
+      height: 72px;
+      opacity: 0;
+    }
+
+    @media (max-width: 768px) {
+
+      #cursor,
+      #cursor-ring {
+        display: none !important;
+      }
+
+      body.has-mouse {
+        cursor: auto;
+      }
+    }
+
+    /* PRELOADER */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      background: var(--bg-dark);
+      z-index: 99999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    #preloader-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      opacity: 0;
+      transform: scale(0.95);
+    }
+
+    #preloader-logo img {
+      width: 48px;
+      height: 48px;
+      object-fit: contain;
+      border-radius: 8px;
+    }
+
+    #preloader-logo span {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(24px, 5vw, 42px);
+      letter-spacing: -0.02em;
+      color: #fff;
+    }
+
+    #preloader-bar-wrap {
+      width: 180px;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.06);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    #preloader-bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--blue-light));
+      width: 0%;
+      border-radius: 2px;
+    }
+
+    /* SCROLLBAR & PROGRESS */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-dark);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 3px;
+    }
+
+    #progress {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--blue-light));
+      z-index: 9999;
+      width: 0%;
+    }
+
+    /* FLOATING GLOW BACKGROUNDS */
+    .glow-bg {
+      position: absolute;
+      width: 50vw;
+      height: 50vw;
+      max-width: 800px;
+      border-radius: 50%;
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(140px);
+      opacity: 0.35;
+      animation: orbFloat 10s ease-in-out infinite;
+    }
+
+    @keyframes orbFloat {
+
+      0%,
+      100% {
+        transform: translate(0, 0) scale(1);
+        opacity: 0.35;
+      }
+
+      33% {
+        transform: translate(2%, -4%) scale(1.05);
+        opacity: 0.45;
+      }
+
+      66% {
+        transform: translate(-2%, 4%) scale(0.95);
+        opacity: 0.3;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .glow-bg {
+        width: 70vw;
+        height: 70vw;
+        max-width: 280px;
+        filter: blur(80px);
+      }
+    }
+
+    .glow-gold {
+      background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+    }
+
+    .glow-blue {
+      background: radial-gradient(circle, var(--blue-glow) 0%, transparent 70%);
+    }
+
+    /* HEADER & NAVIGATION */
+    #header {
+      position: fixed;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: calc(100% - 40px);
+      max-width: 1200px;
+      z-index: 1000;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(7, 13, 25, 0.6);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 9999px;
+      transition: top 0.4s ease, background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+
+    #header.scrolled {
+      top: 10px;
+      background: rgba(7, 13, 25, 0.88);
+      border-color: var(--border-hover);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .logo-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      text-decoration: none;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      border-radius: 6px;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .logo-wrap:hover .logo-mark {
+      transform: scale(1.15) rotate(8deg);
+    }
+
+    .logo-title {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 15px;
+      color: #fff;
+      letter-spacing: -0.01em;
+      line-height: 1;
+    }
+
+    .logo-sub {
+      font-size: 9px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: block;
+      margin-top: 2px;
+    }
+
+    nav.desktop {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    nav.desktop a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.3s;
+      position: relative;
+    }
+
+    nav.desktop a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px;
+      left: 0;
+      width: 0;
+      height: 1.5px;
+      background: var(--primary);
+      transition: width 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    nav.desktop a:hover {
+      color: #fff;
+    }
+
+    nav.desktop a:hover::after {
+      width: 100%;
+    }
+
+    .btn-wpp {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 4px 14px rgba(212, 140, 0, 0.25);
+    }
+
+    .btn-wpp:hover {
+      background: transparent;
+      color: var(--primary);
+      border-color: var(--primary);
+      transform: scale(1.05);
+      box-shadow: 0 8px 24px rgba(212, 140, 0, 0.3);
+    }
+
+    .btn-wpp:active,
+    .btn-primary:active,
+    .btn-secondary:active {
+      transform: scale(0.96) !important;
+    }
+
+    .btn-wpp i {
+      width: 16px;
+      height: 16px;
+    }
+
+    #hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+    }
+
+    #hamburger span {
+      display: block;
+      width: 20px;
+      height: 2px;
+      background: #fff;
+      transition: transform 0.3s, opacity 0.3s;
+    }
+
+    /* MOBILE NAV */
+    #mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 13, 25, 0.72);
+      backdrop-filter: blur(22px) saturate(140%);
+      -webkit-backdrop-filter: blur(22px) saturate(140%);
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 32px;
+      transform: translateY(-100%);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+      #mobile-menu {
+        background: rgba(7, 13, 25, 0.96);
+      }
+    }
+
+    #mobile-menu.open {
+      transform: translateY(0);
+    }
+
+    #mobile-menu a {
+      font-size: 32px;
+      font-weight: 700;
+      color: #fff;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    #mobile-menu a:hover {
+      color: var(--primary);
+    }
+
+    /* HERO SECTION - SPLIT LAYOUT */
+    #inicio {
+      min-height: 100dvh;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 140px 24px 80px;
+      overflow: hidden;
+      z-index: 2;
+      background: var(--bg-dark);
+    }
+
+    #hero-bg {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(7, 13, 25, 0.75) 0%, var(--bg-dark) 100%),
+        url('https://images.unsplash.com/photo-1541888946425-d81bb19240f5?q=80&w=1920&auto=format&fit=crop') center/cover no-repeat;
+      z-index: -1;
+    }
+
+    .hero-split {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 64px;
+      width: 100%;
+      max-width: 1200px;
+      align-items: center;
+      z-index: 2;
+    }
+
+    .hero-text-col {
+      text-align: left;
+    }
+
+    .hero-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 24px;
+      background: rgba(212, 140, 0, 0.08);
+      padding: 8px 20px;
+      border-radius: 9999px;
+      border: 1px solid rgba(212, 140, 0, 0.15);
+    }
+
+    .hero-title {
+      font-size: clamp(34px, 5.5vw, 68px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+      letter-spacing: -0.03em;
+      margin-bottom: 24px;
+    }
+
+    .hero-title span.accent {
+      color: var(--primary);
+      background: linear-gradient(135deg, var(--primary) 0%, #ffc045 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      max-width: 560px;
+      margin-bottom: 40px;
+      font-size: 17px;
+      color: var(--text-muted);
+      font-weight: 400;
+      line-height: 1.7;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--primary);
+      color: #fff;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(212, 140, 0, 0.3);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-primary i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-primary:hover {
+      transform: scale(1.05);
+      box-shadow: 0 12px 36px rgba(212, 140, 0, 0.45);
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      color: #fff;
+      text-decoration: none;
+      padding: 16px 32px;
+      border-radius: 8px;
+      border: 1px solid var(--glass-border);
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .btn-secondary i {
+      width: 18px;
+      height: 18px;
+    }
+
+    .btn-secondary:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.15);
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px rgba(255, 255, 255, 0.08);
+    }
+
+    .hero-visual-col {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    /* TECHNICAL PANEL CARD */
+    .panel-tecnico {
+      background: var(--bg-card);
+      border: 1px solid var(--border-hover);
+      border-radius: 12px;
+      padding: 36px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 30px 60px rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(16px);
+      position: relative;
+      text-align: left;
+    }
+
+    .panel-tecnico::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+    }
+
+    .panel-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      padding-bottom: 16px;
+    }
+
+    .panel-title {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--primary);
+      letter-spacing: 0.15em;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .panel-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: #10b981;
+    }
+
+    .panel-status-dot {
+      width: 8px;
+      height: 8px;
+      background: #10b981;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #10b981;
+    }
+
+    .panel-metric-group {
+      margin-bottom: 20px;
+    }
+
+    .panel-stat-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+
+    .panel-stat-label {
+      color: var(--text-muted);
+    }
+
+    .panel-stat-value {
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .panel-progress-bar {
+      height: 4px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .panel-progress-val {
+      height: 100%;
+      background: var(--primary);
+      width: 100%;
+    }
+
+    .panel-footer-text {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      text-align: right;
+      margin-top: 16px;
+      display: block;
+    }
+
+    /* MARQUEE STRIP (ACTUATION AREAS) */
+    .marquee-strip {
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 20px 0;
+      overflow: hidden;
+      position: relative;
+      z-index: 3;
+    }
+
+    .marquee-inner {
+      display: flex;
+      white-space: nowrap;
+      animation: marqueeScroll 30s linear infinite;
+    }
+
+    .marquee-inner span {
+      font-family: var(--font-display);
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      padding: 0 40px;
+    }
+
+    .marquee-inner .dot {
+      color: var(--primary);
+    }
+
+    @keyframes marqueeScroll {
+      0% {
+        transform: translateX(0);
+      }
+
+      100% {
+        transform: translateX(-50%);
+      }
+    }
+
+    /* GENERAL SECTION STYLING */
+    section.py-section {
+      padding: 120px 24px;
+      position: relative;
+      z-index: 2;
+      overflow: hidden;
+    }
+
+    .section-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .section-header-stacked {
+      max-width: 800px;
+      margin-bottom: 72px;
+    }
+
+    .section-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .section-title {
+      font-size: clamp(28px, 4.5vw, 52px);
+      font-weight: 800;
+      line-height: 1.15;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .section-title em {
+      font-style: italic;
+      font-weight: 700;
+      color: var(--primary);
+    }
+
+    /* SOBRE / DNA SFS SECTION */
+    .sobre-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 48px;
+    }
+
+    .sobre-col-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 40px 32px;
+      position: relative;
+      transition: border-color 0.4s ease, background 0.4s ease, transform 0.4s ease;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sobre-col-box:hover {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+      transform: translateY(-4px);
+    }
+
+    .sobre-col-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .sobre-col-title i {
+      color: var(--primary);
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+    }
+
+    .sobre-col-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .sobre-col-list {
+      list-style: none;
+      margin-top: auto;
+      padding-top: 24px;
+    }
+
+    .sobre-list-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .sobre-list-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .sobre-list-item i {
+      color: var(--primary);
+      width: 14px;
+      height: 14px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .sobre-list-item strong {
+      color: #fff;
+    }
+
+
+
+    /* MÉTODO DE TRABALHO (GANTT TIMELINE) */
+    .metodo-timeline {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .metodo-timeline::before {
+      content: '';
+      position: absolute;
+      left: 27px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: linear-gradient(to bottom, var(--primary), var(--blue-light));
+      opacity: 0.2;
+    }
+
+    .metodo-step {
+      display: flex;
+      gap: 32px;
+      position: relative;
+      z-index: 2;
+    }
+
+    .metodo-node {
+      width: 56px;
+      height: 56px;
+      border-radius: 12px;
+      background: rgba(7, 13, 25, 0.9);
+      border: 1px solid var(--border-color);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-family: var(--font-mono);
+      font-weight: 700;
+      font-size: 14px;
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+      transition: border-color 0.3s, background 0.3s, transform 0.3s;
+    }
+
+    .metodo-step:hover .metodo-node {
+      border-color: var(--primary);
+      background: rgba(212, 140, 0, 0.08);
+      transform: scale(1.05);
+    }
+
+    .metodo-content {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 28px 36px;
+      flex: 1;
+      transition: border-color 0.4s ease, background 0.4s ease;
+    }
+
+    .metodo-step:hover .metodo-content {
+      border-color: var(--border-hover);
+      background: var(--bg-card-hover);
+    }
+
+    .metodo-content h3 {
+      font-size: 18px;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .metodo-content h3 span.phase-duration {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      font-weight: 400;
+      background: rgba(255, 255, 255, 0.04);
+      padding: 3px 8px;
+      border-radius: 4px;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .metodo-content p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 16px;
+    }
+
+    .metodo-tasks {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      font-size: 11px;
+      font-family: var(--font-mono);
+      color: var(--primary);
+    }
+
+    .metodo-task-item {
+      background: rgba(212, 140, 0, 0.05);
+      border: 1px solid rgba(212, 140, 0, 0.12);
+      padding: 4px 10px;
+      border-radius: 4px;
+    }
+
+    /* DIFERENCIAIS CARDS */
+    .diferenciais-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 32px;
+      margin-top: 56px;
+    }
+
+    .diferencial-card {
+      background: linear-gradient(135deg, rgba(13, 23, 42, 0.45) 0%, rgba(7, 13, 25, 0.55) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 40px;
+      position: relative;
+      transition: border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.5s cubic-bezier(0.16, 1, 0.3, 1), transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+      text-align: left;
+      overflow: hidden;
+    }
+
+    .diferencial-card:hover {
+      border-color: var(--border-hover);
+      background: rgba(13, 23, 42, 0.8);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.45);
+    }
+
+    .diferencial-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--primary), transparent);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+    }
+
+    .diferencial-card:hover::before {
+      opacity: 1;
+    }
+
+    .diferencial-header {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .diferencial-icon-wrap {
+      width: 52px;
+      height: 52px;
+      background: rgba(212, 140, 0, 0.06);
+      border: 1px solid rgba(212, 140, 0, 0.15);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      flex-shrink: 0;
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), background 0.3s, border-color 0.3s;
+    }
+
+    .diferencial-card:hover .diferencial-icon-wrap {
+      transform: scale(1.1) rotate(5deg);
+      background: rgba(212, 140, 0, 0.12);
+      border-color: var(--primary);
+    }
+
+    .diferencial-icon-wrap i {
+      width: 24px;
+      height: 24px;
+    }
+
+    .diferencial-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: -0.01em;
+    }
+
+    .diferencial-text {
+      font-size: 14.5px;
+      color: var(--text-muted);
+      line-height: 1.75;
+    }
+
+    /* PARCERIA DESTAQUE */
+    .parceria-secao {
+      margin-top: 56px;
+      background: linear-gradient(135deg, rgba(13, 23, 42, 0.45) 0%, rgba(7, 13, 25, 0.6) 100%);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+      text-align: left;
+    }
+
+    .parceria-secao::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--border-hover), transparent);
+    }
+
+    .parceria-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.8fr;
+      gap: 40px;
+      align-items: center;
+    }
+
+    .parceria-info h3 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 16px;
+      letter-spacing: -0.01em;
+    }
+
+    .parceria-info p {
+      font-size: 15px;
+      color: var(--text-muted);
+      line-height: 1.7;
+    }
+
+    .parceria-info p strong {
+      color: #fff;
+    }
+
+    .parceria-logo-card {
+      background: rgba(7, 13, 25, 0.85);
+      border: 1px solid var(--border-hover);
+      border-radius: 12px;
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s ease, border-color 0.4s ease;
+    }
+
+    .parceria-logo-card:hover {
+      transform: translateY(-4px) scale(1.02);
+      border-color: var(--primary);
+    }
+
+    .parceria-logo-card img {
+      width: 120px;
+      height: 120px;
+      object-fit: contain;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.1);
+      background: #fff;
+      padding: 6px;
+    }
+
+    .parceria-logo-meta {
+      text-align: center;
+    }
+
+    .parceria-logo-name {
+      font-family: var(--font-display);
+      font-weight: 800;
+      color: #fff;
+      font-size: 20px;
+      letter-spacing: -0.01em;
+    }
+
+    .parceria-logo-sub {
+      font-size: 10px;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--primary);
+      margin-top: 2px;
+      font-weight: 600;
+    }
+
+    /* REVEALS */
+    .reveal-css {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.9s cubic-bezier(0.16, 1, 0.3, 1), transform 0.9s cubic-bezier(0.16, 1, 0.3, 1);
+      will-change: opacity, transform;
+    }
+
+    .reveal-css.is-visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .reveal-css-delay-1 {
+      transition-delay: 0.1s;
+    }
+
+    .reveal-css-delay-2 {
+      transition-delay: 0.2s;
+    }
+
+    .reveal-css-delay-3 {
+      transition-delay: 0.3s;
+    }
+
+    .reveal-css-delay-4 {
+      transition-delay: 0.4s;
+    }
+
+    /* FINAL CTA */
+    #cta {
+      text-align: center;
+    }
+
+    .cta-wrapper {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid var(--glass-border);
+      border-radius: 16px;
+      padding: 80px 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-wrapper::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at 50% 100%, rgba(212, 140, 0, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .cta-content {
+      max-width: 600px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 2;
+    }
+
+    .cta-title {
+      font-size: clamp(32px, 5vw, 56px);
+      font-weight: 800;
+      line-height: 1.1;
+      color: #fff;
+      margin-bottom: 24px;
+      letter-spacing: -0.02em;
+    }
+
+    .cta-title span {
+      color: var(--primary);
+    }
+
+    .cta-desc {
+      font-size: 16px;
+      color: var(--text-muted);
+      margin-bottom: 40px;
+      line-height: 1.7;
+    }
+
+    /* FOOTER */
+    footer {
+      background: rgba(4, 8, 16, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      padding: 80px 24px 40px;
+      border-top: 1px solid var(--glass-border);
+      position: relative;
+      z-index: 2;
+    }
+
+    .footer-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr;
+      gap: 64px;
+      padding-bottom: 64px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 32px;
+    }
+
+    .footer-brand p {
+      font-size: 14px;
+      color: var(--text-muted);
+      max-width: 320px;
+      margin: 20px 0 24px;
+      line-height: 1.7;
+    }
+
+    .footer-socials {
+      display: flex;
+      gap: 12px;
+    }
+
+    .footer-socials a {
+      width: 44px;
+      height: 44px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      text-decoration: none;
+      transition: all 0.3s;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .footer-socials a svg {
+      width: 20px;
+      height: 20px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .footer-socials a:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      transform: translateY(-2px);
+      background: rgba(212, 140, 0, 0.08);
+    }
+
+    .footer-col h4 {
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: #fff;
+      margin-bottom: 20px;
+    }
+
+    .footer-col a {
+      display: block;
+      font-size: 14px;
+      color: var(--text-muted);
+      text-decoration: none;
+      margin-bottom: 12px;
+      transition: color 0.3s;
+    }
+
+    .footer-col a:hover {
+      color: #fff;
+    }
+
+    .footer-contact {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+
+    .footer-contact i {
+      color: var(--primary);
+      width: 16px;
+      height: 16px;
+      margin-top: 3px;
+      flex-shrink: 0;
+    }
+
+    .footer-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* RESPONSIVE DESIGN */
+    @media (max-width: 1024px) {
+      .hero-split {
+        grid-template-columns: 1fr;
+        gap: 48px;
+        text-align: center;
+      }
+
+      .hero-text-col {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .hero-desc {
+        margin-inline: auto;
+      }
+
+      .hero-ctas {
+        justify-content: center;
+      }
+
+      .hero-visual-col {
+        justify-content: center;
+      }
+
+      .servicos-grid {
+        grid-template-columns: 1fr;
+        gap: 24px;
+      }
+
+      .metodo-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+      }
+
+      .sobre-split {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .sobre-content-box {
+        padding: 36px;
+      }
+
+      .diferenciais-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .parceria-grid {
+        grid-template-columns: 1fr;
+        gap: 32px;
+        text-align: center;
+      }
+
+      .parceria-logo-card {
+        max-width: 320px;
+        margin: 0 auto;
+      }
+    }
+
+    @media (max-width: 768px) {
+      section.py-section {
+        padding: 60px 16px;
+      }
+
+      #header {
+        width: calc(100% - 32px);
+        padding: 10px 16px;
+      }
+
+      .logo-mark {
+        width: 32px;
+        height: 32px;
+      }
+
+      .logo-title {
+        font-size: 13px;
+      }
+
+      nav.desktop,
+      .btn-wpp.desktop {
+        display: none !important;
+      }
+
+      #hamburger {
+        display: flex;
+        z-index: 1001;
+      }
+
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .hero-desc {
+        font-size: 15px;
+        padding: 0 10px;
+      }
+
+      .hero-ctas {
+        flex-direction: column;
+        width: 100%;
+        gap: 12px;
+      }
+
+      .hero-ctas .btn-primary,
+      .hero-ctas .btn-secondary {
+        width: 100%;
+        justify-content: center;
+      }
+
+      .metodo-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+      }
+
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+
+      .cta-wrapper {
+        padding: 48px 24px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="progress"></div>
+
+  <!-- PRELOADER -->
+  <div id="preloader">
+    <div id="preloader-logo">
+      <img src="Logo da Sfss.jpeg" alt="Logo SFS">
+      <span>SFS Serviços</span>
+    </div>
+    <div id="preloader-bar-wrap">
+      <div id="preloader-bar"></div>
+    </div>
+  </div>
+
+  <div id="cursor"></div>
+  <div id="cursor-ring"></div>
+
+  <!-- MOBILE NAV -->
+  <div id="mobile-menu">
+    <a href="#inicio" onclick="toggleMenu()">Início</a>
+    <a href="#sobre" onclick="toggleMenu()">Apresentação</a>
+    <a href="#metodo" onclick="toggleMenu()">Método</a>
+    <a href="#diferenciais" onclick="toggleMenu()">Diferenciais</a>
+    <a href="#contato" onclick="toggleMenu()">Contato</a>
+  </div>
+
+  <!-- NAVIGATION BAR -->
+  <header id="header">
+    <a href="#inicio" class="logo-wrap" aria-label="Voltar ao início">
+      <img src="Logo da Sfss.jpeg" alt="SFS Logo" class="logo-mark">
+      <div>
+        <span class="logo-title">SFS SERVIÇOS</span>
+        <span class="logo-sub">Construções</span>
+      </div>
+    </a>
+
+    <nav class="desktop">
+      <a href="#inicio">Início</a>
+      <a href="#sobre">Apresentação</a>
+      <a href="#metodo">Método</a>
+      <a href="#diferenciais">Diferenciais</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <a href="https://wa.me/554796867657?text=Olá!%20Gostaria%20de%20um%20orçamento%20de%20construção." target="_blank"
+      class="btn-wpp desktop" aria-label="Falar no WhatsApp">
+      <i data-lucide="message-circle"></i>
+      <span>Orçamento</span>
+    </a>
+
+    <button id="hamburger" onclick="toggleMenu()" aria-label="Menu de Navegação">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+  </header>
+
+  <!-- HERO SECTION - ASYMMETRIC SPLIT -->
+  <section id="inicio">
+    <div id="hero-bg"></div>
+    <div class="glow-bg glow-gold" style="top: 10%; left: 10%;"></div>
+    <div class="glow-bg glow-blue" style="bottom: 10%; right: 10%;"></div>
+  
+    <div class="hero-split">
+      <div class="hero-text-col">
+        <div class="hero-eyebrow">
+          <i data-lucide="check-circle-2" style="width:14px;height:14px;"></i>
+          SFS SERVIÇOS E CONSTRUÇÕES
+        </div>
+        <h1 class="hero-title">Construímos e Reformamos Sua Obra com <span class="accent">Tranquilidade</span>.</h1>
+        <p class="hero-desc">Da fundação ao acabamento, cuidamos de tudo para você: planejamento, compra de materiais, contratação de profissionais e acompanhamento diário. A sua casa ou comércio entregue no prazo e dentro do combinado.</p>
+  
+        <div class="hero-spec-list"
+          style="margin-bottom: 32px; display: flex; flex-direction: column; gap: 12px; font-size: 14px; color: var(--text-muted);">
+          <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="user-check"
+              style="color: var(--primary); width: 16px; height: 16px;"></i> <span>Engenheiro responsável em todas as etapas</span></div>
+          <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="check"
+              style="color: var(--primary); width: 16px; height: 16px;"></i> <span>Preço fechado (sem surpresas no fim da obra)</span></div>
+          <div style="display: flex; align-items: center; gap: 8px;"><i data-lucide="shield"
+              style="color: var(--primary); width: 16px; height: 16px;"></i> <span>Profissionais treinados e seguros na sua obra</span></div>
+        </div>
+  
+        <div class="hero-ctas">
+          <a href="https://wa.me/554796867657?text=Olá!%20Gostaria%20de%20conversar%20sobre%20um%20projeto%20ou%20obra."
+            target="_blank" class="btn-primary">
+            <i data-lucide="message-circle"></i>
+            <span>Agendar Conversa</span>
+          </a>
+          <a href="#metodo" class="btn-secondary">
+            <i data-lucide="arrow-down"></i>
+            <span>Como Trabalhamos</span>
+          </a>
+        </div>
+      </div>
+  
+      <div class="hero-visual-col">
+        <div class="panel-tecnico">
+          <div class="panel-header">
+            <span class="panel-title">Acompanhamento da Sua Obra</span>
+            <div class="panel-status">
+              <span class="panel-status-dot"></span>
+              <span>No Prazo</span>
+            </div>
+          </div>
+          <div class="panel-metric-group">
+            <div class="panel-stat-row">
+              <span class="panel-stat-label">Qualidade e Segurança</span>
+              <span class="panel-stat-value">100% Garantido</span>
+            </div>
+            <div class="panel-progress-bar">
+              <div class="panel-progress-val" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div class="panel-metric-group">
+            <div class="panel-stat-row">
+              <span class="panel-stat-label">Entrega da Obra</span>
+              <span class="panel-stat-value">No Prazo</span>
+            </div>
+            <div class="panel-progress-bar">
+              <div class="panel-progress-val" style="width: 100%;"></div>
+            </div>
+          </div>
+          <div class="panel-metric-group" style="margin-bottom: 0;">
+            <div class="panel-stat-row">
+              <span class="panel-stat-label">Profissionais Registrados</span>
+              <span class="panel-stat-value">Sim</span>
+            </div>
+          </div>
+          <span class="panel-footer-text">SFS Engenharia</span>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+  <!-- MARQUEE STRIP (COMPROMISSOS SIMPLIFICADOS) -->
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>PROJETO E CONSTRUÇÃO INTEGRADA <span class="dot">·</span></span>
+      <span>ENGENHEIRO PRESENTE NA OBRA <span class="dot">·</span></span>
+      <span>MATERIAIS E MÃO DE OBRA DE QUALIDADE <span class="dot">·</span></span>
+      <span>CRONOGRAMA E PREÇO RESPEITADOS <span class="dot">·</span></span>
+      <span>TRANSPARÊNCIA E FOTOS DIÁRIAS <span class="dot">·</span></span>
+      <span>CUMPRIMENTO DAS NORMAS DE SEGURANÇA <span class="dot">·</span></span>
+      <span>PROJETO E CONSTRUÇÃO INTEGRADA <span class="dot">·</span></span>
+      <span>ENGENHEIRO PRESENTE NA OBRA <span class="dot">·</span></span>
+      <span>MATERIAIS E MÃO DE OBRA DE QUALIDADE <span class="dot">·</span></span>
+      <span>CRONOGRAMA E PREÇO RESPEITADOS <span class="dot">·</span></span>
+      <span>TRANSPARÊNCIA E FOTOS DIÁRIAS <span class="dot">·</span></span>
+      <span>CUMPRIMENTO DAS NORMAS DE SEGURANÇA <span class="dot">·</span></span>
+    </div>
+  </div>
+
+  <!-- QUEM SOMOS (APRESENTAÇÃO EDITORIAL) -->
+  <section id="sobre" class="py-section">
+    <div class="section-container">
+      <div class="section-header-stacked">
+        <span class="section-eyebrow">Quem Somos</span>
+        <h2 class="section-title">Compromisso com o seu sonho e a sua <em>tranquilidade</em>.</h2>
+      </div>
+
+      <div class="sobre-grid">
+        <!-- Col 1: Liderança de Confiança -->
+        <div class="sobre-col-box">
+          <h3 class="sobre-col-title"><i data-lucide="user-check"></i> Liderança de Confiança</h3>
+          <p class="sobre-col-text">
+            A SFS Serviços e Construções foi criada pelo Bruno para oferecer um serviço completo e seguro. Nós cuidamos de cada detalhe da sua obra ou reforma, garantindo que tudo seja feito com a máxima qualidade, respeito ao seu dinheiro e total transparência.
+          </p>
+        </div>
+
+        <!-- Col 2: O que Fazemos por Você -->
+        <div class="sobre-col-box">
+          <h3 class="sobre-col-title"><i data-lucide="home"></i> O que Fazemos</h3>
+          <p class="sobre-col-text">
+            Cuidamos de tudo, desde reformas rápidas até construções completas do início ao fim:
+          </p>
+          <ul class="sobre-col-list">
+            <li class="sobre-list-item"><i data-lucide="chevron-right"></i>
+              <div><strong>Casas do Zero:</strong> Projetos residenciais com acabamento caprichado.</div>
+            </li>
+            <li class="sobre-list-item"><i data-lucide="chevron-right"></i>
+              <div><strong>Reformas Comerciais:</strong> Melhoria de lojas e escritórios sem perda de tempo.</div>
+            </li>
+            <li class="sobre-list-item"><i data-lucide="chevron-right"></i>
+              <div><strong>Ampliações:</strong> Aumento de espaços internos e garagens com segurança.</div>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Col 3: Segurança Garantida -->
+        <div class="sobre-col-box">
+          <h3 class="sobre-col-title"><i data-lucide="shield-check"></i> Segurança Garantida</h3>
+          <p class="sobre-col-text">
+            Trabalhamos de forma totalmente regularizada para que você não tenha dores de cabeça:
+          </p>
+          <ul class="sobre-col-list">
+            <li class="sobre-list-item"><i data-lucide="check"></i>
+              <div><strong>Seguro Ativo:</strong> Proteção para a obra e responsabilidade civil.</div>
+            </li>
+            <li class="sobre-list-item"><i data-lucide="check"></i>
+              <div><strong>Profissionais Seguros:</strong> Equipes registradas, treinadas e seguradas.</div>
+            </li>
+            <li class="sobre-list-item"><i data-lucide="check"></i>
+              <div><strong>Materiais Corretos:</strong> Compra de materiais testados e aprovados.</div>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- MÉTODO SFS (PASSO A PASSO) -->
+  <section id="metodo" class="py-section">
+    <div class="glow-bg glow-blue" style="top: 20%; left: -10%;"></div>
+    <div class="section-container">
+      <div class="section-header-stacked text-center"
+        style="max-width: 800px; margin-inline: auto; text-align: center;">
+        <span class="section-eyebrow" style="margin-inline: auto;">Como Trabalhamos</span>
+        <h2 class="section-title">O passo a passo para a entrega da sua <em>obra</em>.</h2>
+      </div>
+
+      <div class="metodo-timeline">
+        <!-- Step 01 -->
+        <div class="metodo-step">
+          <div class="metodo-node">01</div>
+          <div class="metodo-content">
+            <h3>Planejamento e Orçamento <span class="phase-duration">Antes de começar</span></h3>
+            <p>
+              Entendemos o que você precisa, analisamos as condições do terreno e fazemos um orçamento detalhado. Assim, você sabe o preço final exato antes de colocar o primeiro tijolo.
+            </p>
+            <div class="metodo-tasks">
+              <span class="metodo-task-item">Estudo do local</span>
+              <span class="metodo-task-item">Análise dos projetos</span>
+              <span class="metodo-task-item">Orçamento sem surpresas</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 02 -->
+        <div class="metodo-step">
+          <div class="metodo-node">02</div>
+          <div class="metodo-content">
+            <h3>Calendário e Organização <span class="phase-duration">Preparação da Obra</span></h3>
+            <p>
+              Criamos um cronograma completo mostrando o dia exato de cada etapa da construção. Organizamos os seguros necessários e preparamos a equipe com os equipamentos de segurança.
+            </p>
+            <div class="metodo-tasks">
+              <span class="metodo-task-item">Calendário de datas</span>
+              <span class="metodo-task-item">Seguros de proteção</span>
+              <span class="metodo-task-item">Segurança no canteiro</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 03 -->
+        <div class="metodo-step">
+          <div class="metodo-node">03</div>
+          <div class="metodo-content">
+            <h3>Construção e Qualidade <span class="phase-duration">Mão na massa</span></h3>
+            <p>
+              Iniciamos a construção com profissionais experientes. O engenheiro Bruno fiscaliza a qualidade dos materiais e o andamento da edificação todos os dias.
+            </p>
+            <div class="metodo-tasks">
+              <span class="metodo-task-item">Fundações sólidas</span>
+              <span class="metodo-task-item">Fiscalização diária</span>
+              <span class="metodo-task-item">Materiais corretos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 04 -->
+        <div class="metodo-step">
+          <div class="metodo-node">04</div>
+          <div class="metodo-content">
+            <h3>Fotos e Vídeos no WhatsApp <span class="phase-duration">Acompanhamento</span></h3>
+            <p>
+              Enviamos atualizações fáceis de ler, fotos e vídeos diretamente para o seu celular. Você acompanha o progresso da obra sem precisar sair de casa.
+            </p>
+            <div class="metodo-tasks">
+              <span class="metodo-task-item">Fotos semanais</span>
+              <span class="metodo-task-item">Resumos fáceis</span>
+              <span class="metodo-task-item">Tudo no seu celular</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 05 -->
+        <div class="metodo-step">
+          <div class="metodo-node">05</div>
+          <div class="metodo-content">
+            <h3>Testes e Entrega das Chaves <span class="phase-duration">Tudo pronto</span></h3>
+            <p>
+              Testamos todas as tomadas, torneiras e encanamentos da nova construção. Fazemos uma limpeza profunda de toda a sujeira da obra e entregamos a chave pronta para morar ou abrir.
+            </p>
+            <div class="metodo-tasks">
+              <span class="metodo-task-item">Limpeza pós-obra</span>
+              <span class="metodo-task-item">Chaves na mão</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DIFERENCIAIS DE CONFIANÇA -->
+  <section id="diferenciais" class="py-section">
+    <div class="glow-bg glow-gold" style="bottom: 10%; right: -5%;"></div>
+    <div class="section-container">
+      <div class="section-header-stacked">
+        <span class="section-eyebrow">Diferenciais</span>
+        <h2 class="section-title">Por que construir e reformar com a <em>SFS</em>?</h2>
+      </div>
+
+      <div class="diferenciais-grid">
+        <!-- Card 1 -->
+        <div class="diferencial-card">
+          <div class="diferencial-header">
+            <div class="diferencial-icon-wrap">
+              <i data-lucide="circle-dollar-sign"></i>
+            </div>
+            <h3 class="diferencial-title">Preço Fechado de Verdade</h3>
+          </div>
+          <p class="diferencial-text">
+            Você sabe exatamente quanto vai gastar antes de a obra começar. Fazemos um orçamento detalhado e travado, eliminando taxas surpresas ou custos extras no final.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="diferencial-card">
+          <div class="diferencial-header">
+            <div class="diferencial-icon-wrap">
+              <i data-lucide="user-check"></i>
+            </div>
+            <h3 class="diferencial-title">Engenheiro Sempre Presente</h3>
+          </div>
+          <p class="diferencial-text">
+            A supervisão é ativa e diária. O engenheiro Bruno fiscaliza de perto a aplicação dos materiais e o trabalho da equipe, garantindo segurança e alto padrão.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="diferencial-card">
+          <div class="diferencial-header">
+            <div class="diferencial-icon-wrap">
+              <i data-lucide="shield-check"></i>
+            </div>
+            <h3 class="diferencial-title">Equipe Segura e Regularizada</h3>
+          </div>
+          <p class="diferencial-text">
+            Nossa equipe trabalha 100% regularizada e com equipamentos de segurança corretos. Além disso, a obra conta com seguros ativos, protegendo você de qualquer risco.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="diferencial-card">
+          <div class="diferencial-header">
+            <div class="diferencial-icon-wrap">
+              <i data-lucide="smartphone"></i>
+            </div>
+            <h3 class="diferencial-title">Fotos e Atualizações no Celular</h3>
+          </div>
+          <p class="diferencial-text">
+            Você acompanha o andamento da sua construção sem precisar sair de casa. Enviamos relatórios simples, fotos e vídeos semanais direto pelo WhatsApp.
+          </p>
+        </div>
+      </div>
+
+      <!-- PARCERIA DESTAQUE COM A BABITONGA -->
+      <div class="parceria-secao">
+        <div class="parceria-grid">
+          <div class="parceria-info">
+            <h3>Parceria Forte com a Babitonga</h3>
+            <p>
+              Para que a sua obra nunca pare por falta de materiais e para garantir o melhor preço em cada etapa, a SFS trabalha em parceria direta com a <strong>Babitonga Materiais de Construção</strong>.
+            </p>
+            <p style="margin-top: 12px;">
+              Essa união garante frete rápido, entrega de materiais corretos e certificados de acordo com as normas, além de prioridade no atendimento e maior economia para o seu projeto.
+            </p>
+          </div>
+          <div class="parceria-logo-card">
+            <img src="Logo Babitonga.png" alt="Babitonga Logo">
+            <div class="parceria-logo-meta">
+              <span class="parceria-logo-name">BABITONGA</span>
+              <span class="parceria-logo-sub">Materiais</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- FINAL CTA -->
+  <section id="cta" class="py-section">
+    <div class="glow-bg glow-gold" style="bottom: 10%; right: 10%;"></div>
+    <div class="section-container">
+      <div class="cta-wrapper">
+        <div class="cta-content">
+          <span class="section-eyebrow">Orçamento Sem Compromisso</span>
+          <h2 class="cta-title">Pronto para tirar o seu projeto do <span>papel</span>?</h2>
+          <p class="cta-desc">Converse diretamente com o engenheiro Bruno pelo WhatsApp. Vamos entender o que você precisa, avaliar a sua ideia e preparar um orçamento sob medida para a sua obra ou reforma.</p>
+          <a href="https://wa.me/554796867657?text=Olá!%20Gostaria%20de%20conversar%20sobre%20um%20projeto%20ou%20obra."
+            target="_blank" class="btn-primary" aria-label="Solicitar Orçamento no WhatsApp">
+            <i data-lucide="message-circle"></i>
+            <span>Falar com o Bruno</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer id="contato">
+    <div class="footer-container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="#inicio" class="logo-wrap" style="margin-bottom: 20px;">
+            <img src="Logo da Sfss.jpeg" alt="SFS Logo" class="logo-mark">
+            <span class="logo-title">SFS SERVIÇOS</span>
+          </a>
+          <p>Cuidamos de toda a sua obra com transparência, qualidade e engenharia responsável em São Francisco do Sul.</p>
+          <div class="footer-socials">
+            <a href="https://wa.me/554796867657" target="_blank" aria-label="WhatsApp">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path
+                  d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" />
+              </svg>
+            </a>
+          </div>
+        </div>
+
+        <div class="footer-col">
+          <h4>Acesso Rápido</h4>
+          <a href="#inicio">Início</a>
+          <a href="#sobre">Apresentação</a>
+          <a href="#servicos">Serviços</a>
+          <a href="#metodo">Método</a>
+          <a href="#diferenciais">Diferenciais</a>
+        </div>
+
+        <div class="footer-col">
+          <h4>Contato</h4>
+          <div class="footer-contact">
+            <i data-lucide="map-pin"></i>
+            <span>São Francisco do Sul, SC</span>
+          </div>
+          <div class="footer-contact">
+            <i data-lucide="phone"></i>
+            <span>(47) 9686-7657</span>
+          </div>
+          <div class="footer-contact">
+            <i data-lucide="mail"></i>
+            <span>contato@sfsconstrucoes.com.br</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <span>&copy; 2026 SFS Serviços e Construções. Todos os direitos reservados.</span>
+        <span>Construindo Confiança para o Futuro.</span>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // INITIALIZE LUCIDE ICONS
+    lucide.createIcons();
+
+    // PRELOADER ANIMATION
+    window.addEventListener('load', () => {
+      const bar = document.getElementById('preloader-bar');
+      const preloader = document.getElementById('preloader');
+      const logo = document.getElementById('preloader-logo');
+
+      gsap.to(logo, { opacity: 1, scale: 1, duration: 0.8, ease: 'power3.out' });
+
+      let width = 0;
+      const interval = setInterval(() => {
+        width += 4;
+        if (width <= 100) {
+          bar.style.width = width + '%';
+        } else {
+          clearInterval(interval);
+          setTimeout(() => {
+            gsap.to(preloader, {
+              opacity: 0,
+              duration: 0.7,
+              ease: 'power2.out',
+              onComplete: () => {
+                preloader.style.display = 'none';
+                startHeroAnimations();
+              }
+            });
+          }, 200);
+        }
+      }, 20);
+    });
+
+    // CUSTOM CURSOR - SMOOTH PHYSICS
+    const cursor = document.getElementById('cursor');
+    const ring = document.getElementById('cursor-ring');
+    let hasMouse = false;
+    let mouseX = 0, mouseY = 0;
+    let ringX = 0, ringY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+      if (!hasMouse) {
+        hasMouse = true;
+        document.body.classList.add('has-mouse');
+        ringX = e.clientX;
+        ringY = e.clientY;
+      }
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+
+      gsap.to(cursor, { x: mouseX, y: mouseY, duration: 0.05, ease: 'none' });
+    });
+
+    // Smooth ring follow with lerp
+    function animateRing() {
+      ringX += (mouseX - ringX) * 0.12;
+      ringY += (mouseY - ringY) * 0.12;
+      ring.style.left = ringX + 'px';
+      ring.style.top = ringY + 'px';
+      requestAnimationFrame(animateRing);
+    }
+    animateRing();
+
+    document.addEventListener('mouseleave', () => {
+      document.body.classList.remove('has-mouse');
+      hasMouse = false;
+    });
+
+    // Grow cursor on interactive elements
+    document.querySelectorAll('a, button, .sobre-col-box, .metodo-content, .diferencial-card, .parceria-logo-card, .panel-tecnico').forEach(el => {
+      el.addEventListener('mouseenter', () => document.body.classList.add('cursor-grow'));
+      el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-grow'));
+    });
+
+    // HERO ENTRY ANIMATION
+    function startHeroAnimations() {
+      const tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
+      tl.from('#header', { opacity: 0, y: -30, duration: 0.8 })
+        .from('.hero-eyebrow', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
+        .from('.hero-title', { opacity: 0, y: 30, duration: 0.8 }, '-=0.4')
+        .from('.hero-desc', { opacity: 0, y: 20, duration: 0.6 }, '-=0.4')
+        .from('.hero-ctas', { opacity: 0, y: 20, duration: 0.6 }, '-=0.3')
+        .from('.panel-tecnico', { opacity: 0, x: 30, duration: 0.8 }, '-=0.8')
+        .from('.glow-bg', { opacity: 0, scale: 0.5, duration: 1, stagger: 0.2 }, '-=0.8');
+    }
+
+    // SCROLL PROGRESS & HEADER EFFECT
+    window.addEventListener('scroll', () => {
+      const header = document.getElementById('header');
+      const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+      document.getElementById('progress').style.width = scrollPercent + '%';
+
+      if (window.scrollY > 50) {
+        header.classList.add('scrolled');
+      } else {
+        header.classList.remove('scrolled');
+      }
+    });
+
+    // MOBILE MENU TOGGLE
+    let menuOpen = false;
+    function toggleMenu() {
+      menuOpen = !menuOpen;
+      const menu = document.getElementById('mobile-menu');
+      if (menuOpen) {
+        menu.classList.add('open');
+      } else {
+        menu.classList.remove('open');
+      }
+    }
+
+    // GSAP REGISTER
+    gsap.registerPlugin(ScrollTrigger);
+
+    // CARD TILT PHYSICS (3D EFFECT)
+    document.querySelectorAll('.sobre-col-box, .metodo-content, .diferencial-card, .parceria-logo-card, .panel-tecnico').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        if (!hasMouse) return;
+        const r = card.getBoundingClientRect();
+        const x = (e.clientX - r.left - r.width / 2) / r.width;
+        const y = (e.clientY - r.top - r.height / 2) / r.height;
+        gsap.to(card, {
+          rotateX: -y * 6,
+          rotateY: x * 6,
+          translateZ: 8,
+          duration: 0.3,
+          ease: 'power2.out'
+        });
+      });
+      card.addEventListener('mouseleave', () => {
+        gsap.to(card, {
+          rotateX: 0,
+          rotateY: 0,
+          translateZ: 0,
+          duration: 0.5,
+          ease: 'power2.out'
+        });
+      });
+    });
+
+    // INTERSECTION OBSERVER REVEALS (Native CSS)
+    const observerOptions = {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0.15
+    };
+
+    const observer = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, observerOptions);
+
+    // Auto-assign reveal classes and delays
+    const revealGroups = [
+      { parent: '#sobre', selectors: ['.section-eyebrow', '.section-title', '.sobre-col-box'] },
+      { parent: '#metodo', selectors: ['.section-eyebrow', '.section-title', '.metodo-step'] },
+      { parent: '#diferenciais', selectors: ['.section-eyebrow', '.section-title', '.diferencial-card', '.parceria-secao'] }
+    ];
+
+    revealGroups.forEach(group => {
+      const parent = document.querySelector(group.parent);
+      if (!parent) return;
+
+      let delayIndex = 0;
+      group.selectors.forEach(selector => {
+        const elements = parent.querySelectorAll(selector);
+        elements.forEach(el => {
+          el.classList.add('reveal-css');
+          if (delayIndex > 0) {
+            el.classList.add(`reveal-css-delay-${Math.min(delayIndex, 4)}`);
+          }
+          observer.observe(el);
+          delayIndex++;
+        });
+      });
+    });
+
+    // LENIS SMOOTH SCROLLING
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: 'vertical',
+      gestureDirection: 'vertical',
+      smooth: true,
+      mouseMultiplier: 1,
+      smoothTouch: false,
+      touchMultiplier: 2,
+      infinite: false,
+    });
+
+    function raf(time) {
+      lenis.raf(time);
+      requestAnimationFrame(raf);
+    }
+    requestAnimationFrame(raf);
+
+    // Sync Lenis with ScrollTrigger
+    lenis.on('scroll', ScrollTrigger.update);
+    gsap.ticker.add((time) => {
+      lenis.raf(time * 1000);
+    });
+    gsap.ticker.lagSmoothing(0, 0);
+
+    // FIX ANCHOR LINKS (smooth scrolling)
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const targetId = this.getAttribute('href');
+        if (targetId === '#inicio') {
+          lenis.scrollTo(0, { duration: 1.5, ease: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+        } else {
+          const target = document.querySelector(targetId);
+          if (target) {
+            lenis.scrollTo(target, { offset: -80, duration: 1.5, ease: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)) });
+          }
+        }
+      });
+    });
+
+    // SWIPE GESTURE FOR MOBILE MENU
+    (function () {
+      let touchStartX = 0;
+      let touchStartY = 0;
+      let touchStartActive = false;
+
+      document.addEventListener('touchstart', (e) => {
+        if (window.innerWidth > 768) return;
+        const target = e.target;
+        if (target.closest('a, button, input, select, textarea')) return;
+        touchStartX = e.changedTouches[0].clientX;
+        touchStartY = e.changedTouches[0].clientY;
+        touchStartActive = true;
+      }, { passive: true });
+
+      document.addEventListener('touchmove', (e) => {
+        if (!touchStartActive || window.innerWidth > 768) return;
+        const touchCurrentX = e.changedTouches[0].clientX;
+        const touchCurrentY = e.changedTouches[0].clientY;
+        const diffX = touchCurrentX - touchStartX;
+        const diffY = touchCurrentY - touchStartY;
+        const thresholdX = 60;
+        const maxThresholdY = 40;
+
+        if (Math.abs(diffY) < maxThresholdY) {
+          if (diffX < -thresholdX) {
+            if (!menuOpen) {
+              toggleMenu();
+              touchStartActive = false;
+            }
+          } else if (diffX > thresholdX) {
+            if (menuOpen) {
+              toggleMenu();
+              touchStartActive = false;
+            }
+          }
+        } else {
+          touchStartActive = false;
+        }
+      }, { passive: true });
+
+      document.addEventListener('touchend', () => { touchStartActive = false; }, { passive: true });
+      document.addEventListener('touchcancel', () => { touchStartActive = false; }, { passive: true });
+    })();
+  </script>
+</body>
+
+</html>
